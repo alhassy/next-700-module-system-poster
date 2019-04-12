@@ -1,0 +1,26 @@
+#+TITLE: The Next 700 Module Systems -- Poster
+#+author: Musa Al-hassy
+#+email: alhassy@gmail.com
+#+OPTIONS: toc:nil d:nil
+
+Here in is my setup for an Org-based poster that uses
+[[http://www.brian-amberg.de/uni/poster/][baposter]], an amazing and intuitive poster creation system.
+( A future side project will be to provide a full Org interface to baposter. )
+
+# Git repo for baposter examples
+# https://github.com/mloesch/baposter
+
+Below are the contents of the poster.
+
+----
+
+# TOC: headlines 2
+#+INCLUDE: poster.org
+
+* COMMENT footer
+
+# Local Variables:
+# compile-command: (org-md-export-to-markdown)
+# End:
+
+

@@ -1,0 +1,545 @@
+#+title: What is a package?
+#+author: Musa Al-hassy
+#+author: @@latex: \hspace{12pt} \\ Department of Computing And Software, McMaster University \\ \vspace{4pt} Supervisors: Jacques Carette \& Wolfram Kahl  \vspace{-5pt}@@
+#+startup: indent
+# export_file_name: my-poster
+
+#+options: d:nil toc:nil title:nil
+# no drawers, table of contents, nor a beamer title ‘page’.
+
+#+TODO: TODO | Column
+#+LATEX_CLASS: baposter
+#+LATEX_CLASS_OPTIONS: [paperwidth=36in,paperheight=24in,fontscale=0.475]
+
+#+LATEX_HEADER: \usepackage[backend=biber,style=alphabetic]{biblatex}
+#+LATEX_HEADER: \addbibresource{MyPosterReferences.bib}
+
+* COMMENT LaTeX_CLASS setup
+
+#+begin_src emacs-lisp
+(add-to-list 'org-latex-classes
+  '("baposter" "\\documentclass{baposter}"
+    ("\\section{%s}" . "\\section*{%s}")
+    ("\\subsection{%s}" . "\\subsection*{%s}")
+    ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
+)    
+#+end_src
+
+* usepackage declarations                                            :ignore:
+
+#+latex_header: \usepackage{listings}
+
+#+latex_header: \usepackage{tcolorbox}
+#+latex_header: \usepackage{xspace}
+#+latex_header: \usepackage{graphicx} % Required for including images
+#+latex_header: \graphicspath{{figures/}} % Directory in which figures are stored
+#+latex_header: \usepackage{subfigure}
+#+latex_header: \usepackage{amsmath} % For typesetting math
+#+latex_header: \usepackage{amssymb} % Adds new symbols to be used in math mode
+#+latex_header: \usepackage{wrapfig}
+#+latex_header: \usepackage{booktabs} % Top and bottom rules for tables
+#+latex_header: \usepackage{enumitem} % Used to reduce itemize/enumerate spacing
+#+latex_header: \usepackage{palatino} % Use the Palatino font
+#+latex_header: \usepackage[font=small,labelfont=bf]{caption} % Required for specifying captions to tables and figures
+#+latex_header: \usepackage[makeroom]{cancel}
+#+latex_header: \usepackage{multicol} % Required for multiple columns
+#+latex_header: \setlength{\columnsep}{1.5em} % Slightly increase the space between columns
+#+latex_header: \setlength{\columnseprule}{0mm} % No horizontal rule between columns
+#+latex_header: \usepackage{xcolor}
+#+latex_header: \usepackage{tikz} % Required for flow chart
+#+latex_header: \usetikzlibrary{shapes,arrows} % Tikz libraries required for the flow chart in the template
+
+* new commands & colours                                             :ignore:
+#+begin_export latex
+% src: http://calccheck.mcmaster.ca/CalcCheck-0.2/CalcStyleV9.sty
+%
+% For quantification, e.g.:
+% ( \star x \with R \spot P)
+% ( \forall n : \NN \withspot n \geq 0 )
+\def\spot{\ \bullet\ }
+\def\withrule{\vrule height1.57ex depth0.43ex width0.12em}
+\def\with{\kern0.7em \withrule \kern0.7em }
+\def\withspot{\kern0.7em \withrule \kern-0.15em \bullet \  }
+
+\newcommand{\compresslist}{ % Define a command to reduce spacing within itemize/enumerate environments, this is used right after \begin{itemize} or \begin{enumerate}
+\setlength{\itemsep}{1pt}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}
+}
+\definecolor{maroon}{HTML}{800035}
+\definecolor{lightblue}{rgb}{0.145,0.6666,1} 
+\definecolor{pastelyellow}{rgb}{0.958,0.958, 0.535}
+\definecolor{blues}{HTML}{B1F1E6}
+\definecolor{greens}{rgb}{0.538,0.925,0.610}
+#+end_export
+
+* poster & title setup                                               :ignore:
+
+# The titling package provides various user-friendly ways to modify title pages.
+# It provides the macros \thetitle, \theauthor and \thedate which can be reused anywhere in your document.
+#+LATEX_HEADER: \usepackage{titling}
+
+#+begin_export latex
+\begin{poster}%
+{
+headerborder=closed, % Adds a border around the header of content boxes
+colspacing=1em, % Column spacing
+bgColorOne=white, % Background color for the gradient on the left side of the poster
+bgColorTwo=white, % Background color for the gradient on the right side of the poster
+borderColor=gray, % Border color
+headerColorOne=maroon, % Background color for the header in the content boxes (left side)
+headerColorTwo=maroon, % Background color for the header in the content boxes (right side)
+headerFontColor=white, % Text color for the header text in the content boxes
+boxColorOne=white, % Background color of the content boxes
+textborder=roundedleft, % Format of the border around content boxes, can be: none, bars, coils, triangles, rectangle, rounded, roundedsmall, roundedright or faded
+eyecatcher=true, % Set to false for ignoring the left logo in the title and move the title left
+headerheight=0.16\textheight, % Height of the header
+headershape=roundedright, % Specify the rounded corner in the content box headers, can be: rectangle, small-rounded, roundedright, roundedleft or rounded
+headerfont=\Large\bf\textsc, % Large, bold and sans serif font in the headers of content boxes
+%textfont={\setlength{\parindent}{1.5em}}, % Uncomment for paragraph indentation
+linewidth=2pt % Width of the border lines around content boxes
+}
+%
+{\includegraphics[height=10em]{mac2.png}} % First university/lab logo on the left
+%
+{\bf\textsc{ \thetitle }} % Poster title
+%
+{\textsc{\theauthor}} % Author names and institution
+%
+{\includegraphics[height=9em]{cas.png}} % Second university/lab logo on the right
+#+end_export
+
+* Why care about ‘packaging’?                                        :ignore:
+
+#+latex: \headerbox{Why care about ‘packaging’?}{name=whypackage,column=0,row=0}{
+
+How do you write an algorithm for the dot product?
+
+This way? ---With every piece mentioned in detail.
+\begin{flalign*}
+   dot_{six} & \;:\; \mathbb{R} \times \mathbb{R} \times \mathbb{R} \times \mathbb{R} \times \mathbb{R} \times \mathbb{R}  \to \mathbb{R}               
+\\ dot_{six} & \; x_1 \; x_2 \; x_3 \; y_1 \; y_2 \; y_3  \;\;=\;\;  x_1 * y_1 + x_2 * y_2 + x_3 * y_3
+\end{flalign*}
+Or with the pieces bundled up into “logically related units”?
+\begin{flalign*}
+   dot_{vec} & \;:\; \mathbb{R}^3 \times \mathbb{R}^3  \to \mathbb{R}               
+\\ dot_{vec} & \; \vec{x} \; \vec{y} \;\;=\;\;  \vec{x}_1 * \vec{y}_1 + \vec{x}_2 * \vec{y}_2 + \vec{x}_3 * \vec{y}_3
+\end{flalign*}
+
+What if we want to ignore the second dimension?
+\begin{flalign*}
+   dot_{noTwo} & \;:\; \mathbb{R}^3 \times \mathbb{R}^3 \to \mathbb{R}               
+\\ dot_{noTwo} & \; \vec{x} \; \vec{y} \;\;=\;\;  \vec{x}_1 * \vec{y}_1 + \vec{x}_3 * \vec{y}_3
+\end{flalign*}
+
+What if we only want to product along a given vector $\vec{y}$?
+\begin{flalign*}
+   dot_{fixed} & \;:\; \mathbb{R}^3 \to \mathbb{R}               
+\\ dot_{fixed} & \; \vec{x} \;\;=\;\;  \vec{x}_1 * \vec{y}_1 + \vec{x}_2 * \vec{y}_2 + \vec{x}_3 * \vec{y}_3
+\end{flalign*}
+
+All the ‘forms’ are useful, slightly distinct, but *behave essentially the same!*
+#+begin_center
+/Let's write one form, and generate the rest!/
+#+end_center
+
+#+latex: }
+
+* dot code; Write once, Generate many                                :ignore:
+ \begin{posterbox}[name=dotcode,column=0, span = 1, below=whypackage]{Write once, Generate many}
+ \begin{lstlisting}
+// Write once,
+Vector = Int[3]
+Int dot_vec (Vector x, Vector y)
+  =   x[0] * y[0]  +  x[1] * y[1]  +  x[2] * y[2]
+
+// Generate many,
+dot_six    =  dot_vec #flattened#
+dot_noTwo  =  dot_vec #with# x[1] := 0, y[1] := 0
+dot_fixed  =  dot_vec #with# y := [2, 3, 5]
+ \end{lstlisting}
+ \end{posterbox}
+* The Next 700 Module Systems :ignore:
+
+#+latex: \headerbox{The Next 700 Module Systems}{name=bottompane,column=0,span=2,below=dotcode}{
+#+begin_center
+
+We begin by manually writing a “package former” --a package whose concrete form is unspecified,
+akin to type constructors. --Look at the demo.
+
+| *Novel Idea:* /Higher-order packages/ |
+
+With such a generic mechanism, we could derive nearly all other forms of packaging!
+
+# % amssymb
+# \checkmark
+
+| \checkmark Classes | \checkmark Records | \checkmark Interfaces | \checkmark Typeclasses | \checkmark Traits | \checkmark Dependent Products | \checkmark Dependent Sums |
+
+Write a method on the package former /once/ then have it apply to all deviations!
+
+Moreover, it supports the expected features of modularisation.
+
+| \checkmark Namespacing        | \checkmark Information Hiding | \checkmark Polymorphism | \checkmark First- and Second-class Citizenship |
+| \checkmark Applicative modules | \checkmark Generative modules | \checkmark Subtyping    | \checkmark Computation Sharing                 |
+
+# Parameterised modules, mixins, sub-modles
+
+#+end_center
+#+latex: }
+
+* Problem                                                            :ignore:
+
+#+latex: \headerbox{Problem}{name=problem,column=1,row=0}{ % This block's bottom aligns with the bottom of the conclusion block
+
+#+BEGIN_center
+There are many ways to bundle up data;
+rather than write each form by hand,
+we should “write one, generate many”!
+#+END_center
+
+#+latex: }
+
+* Why the need?                                                      :ignore:
+
+#+latex: \headerbox{Why the need?}{name=whyneed,column=1, below=problem}{
+
+The dot product example is small and could have been done /manually, by hand/;
+so why not?
+
++ Tedious & error-prone,
++ Obscures the corresponding general principles underlying them,
++ No machine support to ensure implementation is correct,
++ Does not scale!
+
+#+latex: }
+
+* Objective :ignore:
+
+#+latex: \headerbox{Objective}{name=objective,column=1, below=whyneed}{
+
+Without jeopardising runtime performance \cite{dtl_practical_erasure}, we want
+
+| /Machine support deriving mechanisms for different ‘views’ of packages./ |
+
+Which should be well-defined, with coherent semantic underpinning
+---such as an associated Cartesian Closed Category \cite{modules_categorically}.
+
+#+latex: }
+
+* Spot the Subtlety                                                  :ignore:
+
+#+latex: \headerbox{Spot the Subtlety}{name=subtlety,column=1,below=objective}{
+
+Packaging forms are essentially problems of variable introduction,
+
+#  {\color{white} \cong \;}
+\begin{align*}
+         &\;\; \forall x_1, x_2, x_3, y_1, y_2, y_3  \;\;\bullet\;\; \cdots
+\\ \cong \;\;&\;\; \forall \vec{x}, \vec{y}  \hspace{6.6em}\;\;\bullet\;\; \cdots
+\\ \cong \;\;&\;\; \forall \vec{y} \;\;\bullet\;\; \forall \vec{x} \hspace{4.5em} \;\;\bullet\;\; \cdots
+\end{align*}
+
+Possibly with constraints,
+\begin{align*}
+\forall \vec{x}, \vec{y}  \;\;\with\;\; \vec{x}_2 = 0 \;\land\; \vec{y}_2 = 0 \;\;\bullet\;\; \cdots
+\end{align*}
+
+#+latex: }
+
+* What are these modifiers?                                          :ignore:
+
+#+latex: \headerbox{Modifying Containers}{name=modification,column=2,row=0}{
+
+When we have a package, we can do a number of things with it \cite{tpc}:
+
+| Flatten       | ‘unpack’ some of its nested packages       |
+| Instantiate   | ‘pick values’ for some of its contents     |
+| Parameterise  | ‘fix’ some of its contents                 |
+| Hide          | ‘ignore’ some of its contents              |
+| Rename        | ‘relabel’ some of its contents             |
+| Mixin         | ‘combine’ packages over a common interface |
+| Package-up    | ‘bundle’ some of its contents              |
+
+#+latex: }
+* Preliminary Research                                                 :ignore:
+
+#+latex: \headerbox{Preliminary Research}{name=preliminary,column=2,below=modification}{
+
++ Emacs prototype actually producing derivatives from “package formers” \newline ---see the demo.
++ Packages, top level modules, can be treated like any other /value/.
+  - @@latex: {\small Uniform syntax for variations on packages and uniform computational definitions.}@@
++ Prototype interface is practical and accessible.
++ Prototype appears promising to eliminate massive renaming boilerplate in
+  \cite{RATH, agda_lib} developments.
+
+#+latex: }
+
+* Next Steps                                                         :ignore:
+
+#+latex: \headerbox{Next Steps}{name=nextsteps,column=2,below=preliminary}{
+
++ Realise proposal in an existing industrial-strength compiler.
+  - Hence, implementations are more than just ‘research quality’ \cite{theories_as_types}
+    but actually ready for a broad audience.
+
+  - Users should be able to extend it within the core language --without resorting to inspecting
+    the compiler.
+    
++ Utilise the opportunities provided by dependent-types \cite{curry_howard, why_dependent_types_matter} to provide
+  a module system suitable for dependently-typed languages
+  whose constructs are orthogonal. ---/Dependent-types blur many lines!/
+  
++ Provide denotational semantics \cite{dtl_cat_models} for the resulting module system.
+  - Ensure all proofs are machine-checked, using Agda \cite{lof_constructive_math}.
+    # Agda \cite{agda_overview, lof_constructive_math}.
+
+#+latex: }
+* COMMENT Example code                                               :ignore:
+ \begin{posterbox}[name=listing,column=1,row=0]{Listing}
+   \begin{lstlisting}
+
+#+BEGIN_SRC haskell
+f :: Int → Int
+f x = z
+#+END_SRC
+ \end{lstlisting}
+ \end{posterbox}
+* COMMENT my title :ignore:
+
+#+latex: \headerbox{my title}{name=mytitle,column=1,row=1, below=method}{ % This block's bottom aligns with the bottom of the conclusion block
+
+words are here
+
+and
+
+| also | here | nice |
+| it's | a    | table |
+
+*bye* /or/ _not_
+
+#+latex: }
+* REFERENCES                                                                   :ignore:
+#+latex: \headerbox{References}{name=references,column=2,span=1,below=nextsteps}{
+
+# Do not print “References” section title.
+#+latex: \renewcommand{\section}[2]{\vskip 0.05em}
+
+#+latex: \renewcommand*{\bibfont}{\small}
+#+latex: \renewbibmacro{in:}{}
+
+#+LaTeX: \printbibliography
+
+#+latex: }
+* end poster :ignore:                                                :ignore:
+#+begin_export latex
+\end{poster}
+#+end_export
+
+* My References                                              :ignore:
+
+** \iffalse                                                 :ignore:
+\iffalse
+
+\parencite{RATH, agda_trains, agda_web}
+
+** Theory Presentation Combinators :tpc:
+#+BEGIN_SRC latex :tangle MyPosterReferences.bib  :exports none
+@Article{tpc,
+  author       = {Carette, Jacques and O’Connor, Russell},
+  title	       = {Theory Presentation Combinators},
+  year	       = {2012},
+}
+#+END_SRC
+** A Brief Overview of Agda --- A Functional Language with Dependent Types :agda_overview:
+#+BEGIN_SRC latex :tangle MyPosterReferences.bib  :exports none
+@InCollection{agda_overview,
+  author = {Ana Bove and Peter Dybjer and Ulf Norell},
+  title = {A Brief Overview of {Agda} --- A Functional Language with Dependent Types},
+  abstract = {We give an overview of Agda, the latest in a series
+    of dependently typed programming languages developed in Gothenburg.
+    Agda is based on Martin-Löf’s intuitionistic type theory
+    but extends it with numerous programming language features.
+    It supports a wide range of inductive data types,
+    including inductive families and inductive-recursive types,
+    with associated flexible pattern-matching.
+    Unlike other proof assistants, Agda is not tactic-based.
+    Instead it has an Emacs-based interface which allows
+    programming by gradual refinement of incomplete type-correct terms.}
+}
+#+END_SRC
+** Working with Mathematical Structures in Type Theory :math_structs_in_types:
+
+#+BEGIN_SRC latex :tangle MyPosterReferences.bib  :exports none
+@InProceedings{math_structs_in_types,
+author={Sacerdoti Coen, Claudio and Tassi, Enrico},
+editor={Miculan, Marino
+and Scagnetto, Ivan
+and Honsell, Furio},
+title={Working with Mathematical Structures in Type Theory},
+booktitle={Types for Proofs and Programs},
+year={2008},
+publisher={Springer Berlin Heidelberg},
+address={Berlin, Heidelberg},
+pages={157--172},
+abstract={We address the problem of representing mathematical structures in a proof 
+          assistant which: 1) is based on a type theory with dependent types, 
+          telescopes and a computational version of Leibniz equality; 2) implements 
+          coercive subtyping, accepting multiple coherent paths between type families;
+          3) implements a restricted form of higher order unification and type 
+          reconstruction. We show how to exploit the previous quite common features
+          to reduce the ``syntactic'' gap between pen{\&}paper and formalised algebra.
+          However, to reach our goal we need to propose unification and type
+          reconstruction heuristics that are slightly different from the ones usually
+          implemented. We have implemented them in Matita.},
+isbn={978-3-540-68103-8},
+keywords = {adjunctions, category theory, isomorphism, yoneda lemma},
+note={
+    The paper introduces the "with" type former, which essentially fixes the value
+    of a field in a record type. The syntax \texttt{R with x = E} is desugard into
+    \texttt{Σ r : R • r.x ≡ E}.
+
+    They provide a nice set of rules to work with this
+    type former; also considering coercisions.
+    },
+}
+#+END_SRC
+** Agda Library                                                       :agda_lib:
+#+BEGIN_SRC latex :tangle MyPosterReferences.bib  :exports none
+@online{agda_lib,
+  author = {The Agda Team},
+  title = {Agda Standard Library},
+  year = 2019,
+}
+#+END_SRC
+** Constructive Mathematics and Computer Programming :lof_constructive_math:
+
+#+BEGIN_SRC latex :tangle MyPosterReferences.bib  :exports none
+@inproceedings{lof_constructive_math,
+ author = {Martin-L\"{o}f, P.},
+ title = {Constructive Mathematics and Computer Programming},
+ year = {1985},
+}
+#+END_SRC
+
+** Type classes for mathematics in type theory :typeclasses_for_maths:
+
+#+BEGIN_SRC latex :tangle MyPosterReferences.bib  :exports none
+@article{typeclasses_for_maths,
+  author    = {Bas Spitters and
+               Eelis van der Weegen},
+  title     = {Type classes for mathematics in type theory},
+  journal   = {Mathematical Structures in Computer Science},
+  volume    = {21},
+  number    = {4},
+  pages     = {795--825},
+  year      = {2011},
+  url       = {https://doi.org/10.1017/S0960129511000119},
+  doi       = {10.1017/S0960129511000119},
+  timestamp = {Wed, 14 Jun 2017 20:39:05 +0200},
+  biburl    = {https://dblp.org/rec/bib/journals/mscs/SpittersW11},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+#+END_SRC
+** Theories as Types :theories_as_types:
+
+#+BEGIN_SRC latex :tangle MyPosterReferences.bib  :exports none
+@inproceedings{theories_as_types,
+  author    = {Dennis M{\"{u}}ller and
+               Florian Rabe and
+               Michael Kohlhase},
+  title     = {Theories as Types},
+  year      = {2018},
+}
+#+END_SRC
+
+** A Cateogry-Theoretic Account of Program Modules :modules_categorically:
+
+#+BEGIN_SRC latex :tangle MyPosterReferences.bib  :exports none
+@article{modules_categorically,
+  author    = {Eugenio Moggi},
+  title     = {A Cateogry-Theoretic Account of Program Modules},
+  year      = {1991},
+}
+#+END_SRC
+** Relation-Algebraic Theories in Agda :RATH:
+
+#+BEGIN_SRC latex :tangle MyPosterReferences.bib  :exports none
+@online{RATH,
+  title = {Relation-Algebraic Theories in Agda},
+  author  = {Wolfram Kahl},
+  year = 2018,
+}
+#+END_SRC
+** Dependent Types At Work                                    :curry_howard:
+
+# A good walkthrough and practicual use of Curry-Howard.
+
+#+BEGIN_SRC latex :tangle MyPosterReferences.bib  :exports none
+@inproceedings{curry_howard,
+  author    = {Ana Bove and
+               Peter Dybjer},
+  title     = {Dependent Types at Work},
+  year      = {2008},
+}
+#+END_SRC
+** Why dependent types matter :why_dependent_types_matter:
+
+#+BEGIN_SRC latex :tangle MyPosterReferences.bib  :exports none
+@inproceedings{why_dependent_types_matter,
+  author    = {James McKinna},
+  title     = {Why dependent types matter},
+  year      = {2006},
+}
+#+END_SRC
+
+** Practical Erasure in Dependently Typed Languages :dtl_practical_erasure:
+#+BEGIN_SRC latex :tangle MyPosterReferences.bib  :exports none
+@article{dtl_practical_erasure,
+ author = {Matus Tejiscak and Edwin Brady},
+ title = {Practical Erasure in Dependently Typed Languages},
+ year = {2015},
+abstract = {Full-spectrum dependently typed languages and tools, such as
+Idris and Agda, have recently been gaining interest due to the
+expressive power of their type systems, in particular their ability to
+describe precise properties of programs which can be verified by
+type checking.
+With full-spectrum dependent types, we can treat types as firstclass
+language constructs: types can be parameterised on values,
+and types can be computed like any other value. However, this
+power brings new challenges when compiling to executable code.
+Without special treatment, values which exist only for compile-time
+checking may leak into compiled code, even in relatively simple
+cases. Previous attempts to tackle the problem are unsatisfying in
+that they either fail to erase all irrelevant information, require user
+annotation or in some other way restrict the expressive power of the
+language.
+In this paper, we present a new erasure mechanism based on
+whole-program analysis, currently implemented in the Idris programming
+language. We give some simple examples of dependently
+typed functional programs with compile-time guarantees of their
+properties, but for which existing erasure techniques fall short. We
+then describe our new analysis method and show that with it, erasure
+can lead to asymptotically faster code thanks to the ability to erase
+not only proofs but also indices.},
+}
+#+END_SRC
+** Categorical Models of Dependent Type Theory :dtl_cat_models:
+
+#+BEGIN_SRC latex :tangle MyPosterReferences.bib  :exports none
+@misc{dtl_cat_models,
+  author    = {Alexandre Buisse},
+  title     = {Categorical Models of Dependent Type Theory},
+  school    = {Chalmers University of Technology},
+  year      = {2006},
+}
+#+END_SRC
+** \fi
+* COMMENT footer                                                     :ignore:
+
+# Local Variables:
+# compile-command: (progn (org-babel-tangle) (org-latex-export-to-pdf))
+# End:
+
+
+

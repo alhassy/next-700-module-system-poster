@@ -1,0 +1,150 @@
+@Article{tpc,
+  author       = {Carette, Jacques and O’Connor, Russell},
+  title	       = {Theory Presentation Combinators},
+  year	       = {2012},
+}
+
+@InCollection{agda_overview,
+  author = {Ana Bove and Peter Dybjer and Ulf Norell},
+  title = {A Brief Overview of {Agda} --- A Functional Language with Dependent Types},
+  abstract = {We give an overview of Agda, the latest in a series
+    of dependently typed programming languages developed in Gothenburg.
+    Agda is based on Martin-Löf’s intuitionistic type theory
+    but extends it with numerous programming language features.
+    It supports a wide range of inductive data types,
+    including inductive families and inductive-recursive types,
+    with associated flexible pattern-matching.
+    Unlike other proof assistants, Agda is not tactic-based.
+    Instead it has an Emacs-based interface which allows
+    programming by gradual refinement of incomplete type-correct terms.}
+}
+
+@InProceedings{math_structs_in_types,
+author={Sacerdoti Coen, Claudio and Tassi, Enrico},
+editor={Miculan, Marino
+and Scagnetto, Ivan
+and Honsell, Furio},
+title={Working with Mathematical Structures in Type Theory},
+booktitle={Types for Proofs and Programs},
+year={2008},
+publisher={Springer Berlin Heidelberg},
+address={Berlin, Heidelberg},
+pages={157--172},
+abstract={We address the problem of representing mathematical structures in a proof 
+          assistant which: 1) is based on a type theory with dependent types, 
+          telescopes and a computational version of Leibniz equality; 2) implements 
+          coercive subtyping, accepting multiple coherent paths between type families;
+          3) implements a restricted form of higher order unification and type 
+          reconstruction. We show how to exploit the previous quite common features
+          to reduce the ``syntactic'' gap between pen{\&}paper and formalised algebra.
+          However, to reach our goal we need to propose unification and type
+          reconstruction heuristics that are slightly different from the ones usually
+          implemented. We have implemented them in Matita.},
+isbn={978-3-540-68103-8},
+keywords = {adjunctions, category theory, isomorphism, yoneda lemma},
+note={
+    The paper introduces the "with" type former, which essentially fixes the value
+    of a field in a record type. The syntax \texttt{R with x = E} is desugard into
+    \texttt{Σ r : R • r.x ≡ E}.
+
+    They provide a nice set of rules to work with this
+    type former; also considering coercisions.
+    },
+}
+
+@online{agda_lib,
+  author = {The Agda Team},
+  title = {Agda Standard Library},
+  year = 2019,
+}
+
+@inproceedings{lof_constructive_math,
+ author = {Martin-L\"{o}f, P.},
+ title = {Constructive Mathematics and Computer Programming},
+ year = {1985},
+}
+
+@article{typeclasses_for_maths,
+  author    = {Bas Spitters and
+               Eelis van der Weegen},
+  title     = {Type classes for mathematics in type theory},
+  journal   = {Mathematical Structures in Computer Science},
+  volume    = {21},
+  number    = {4},
+  pages     = {795--825},
+  year      = {2011},
+  url       = {https://doi.org/10.1017/S0960129511000119},
+  doi       = {10.1017/S0960129511000119},
+  timestamp = {Wed, 14 Jun 2017 20:39:05 +0200},
+  biburl    = {https://dblp.org/rec/bib/journals/mscs/SpittersW11},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{theories_as_types,
+  author    = {Dennis M{\"{u}}ller and
+               Florian Rabe and
+               Michael Kohlhase},
+  title     = {Theories as Types},
+  year      = {2018},
+}
+
+@article{modules_categorically,
+  author    = {Eugenio Moggi},
+  title     = {A Cateogry-Theoretic Account of Program Modules},
+  year      = {1991},
+}
+
+@online{RATH,
+  title = {Relation-Algebraic Theories in Agda},
+  author  = {Wolfram Kahl},
+  year = 2018,
+}
+
+@inproceedings{curry_howard,
+  author    = {Ana Bove and
+               Peter Dybjer},
+  title     = {Dependent Types at Work},
+  year      = {2008},
+}
+
+@inproceedings{why_dependent_types_matter,
+  author    = {James McKinna},
+  title     = {Why dependent types matter},
+  year      = {2006},
+}
+
+@article{dtl_practical_erasure,
+ author = {Matus Tejiscak and Edwin Brady},
+ title = {Practical Erasure in Dependently Typed Languages},
+ year = {2015},
+abstract = {Full-spectrum dependently typed languages and tools, such as
+Idris and Agda, have recently been gaining interest due to the
+expressive power of their type systems, in particular their ability to
+describe precise properties of programs which can be verified by
+type checking.
+With full-spectrum dependent types, we can treat types as firstclass
+language constructs: types can be parameterised on values,
+and types can be computed like any other value. However, this
+power brings new challenges when compiling to executable code.
+Without special treatment, values which exist only for compile-time
+checking may leak into compiled code, even in relatively simple
+cases. Previous attempts to tackle the problem are unsatisfying in
+that they either fail to erase all irrelevant information, require user
+annotation or in some other way restrict the expressive power of the
+language.
+In this paper, we present a new erasure mechanism based on
+whole-program analysis, currently implemented in the Idris programming
+language. We give some simple examples of dependently
+typed functional programs with compile-time guarantees of their
+properties, but for which existing erasure techniques fall short. We
+then describe our new analysis method and show that with it, erasure
+can lead to asymptotically faster code thanks to the ability to erase
+not only proofs but also indices.},
+}
+
+@misc{dtl_cat_models,
+  author    = {Alexandre Buisse},
+  title     = {Categorical Models of Dependent Type Theory},
+  school    = {Chalmers University of Technology},
+  year      = {2006},
+}
